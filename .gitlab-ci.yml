@@ -1,0 +1,60 @@
+stages:
+  - test
+  - deploy
+
+variables:
+  DEPLOY_HOST: 10.194.32.221
+  DEPLOY_USER: log430
+  PROJECT_PATH: "/home/$DEPLOY_USER/log430-a25-labo3"
+
+# Stage de test (optionnel)
+test:
+  stage: test
+  image: python:3.11-slim
+  before_script:
+    - pip install -r requirements.txt
+  script:
+    - cd src && python -m pytest tests/ -v
+  only:
+    - main
+
+# Stage de déploiement
+deploy:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    # Installation de SSH et Git dans le conteneur GitLab
+    - apk add --no-cache openssh-client git
+    # Configuration de la clé SSH (depuis les variables GitLab)
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+  script:
+    # Script de déploiement
+    - |
+      ssh $DEPLOY_USER@$DEPLOY_HOST "
+        cd $PROJECT_PATH || {
+          echo 'Cloning repository for first time...'
+          cd /home/$DEPLOY_USER
+          git clone https://github.com/primika27/log430-a25-labo3.git
+          cd log430-a25-labo3
+        }
+        
+        echo 'Pulling latest changes...'
+        git pull origin main
+        
+        echo 'Stopping existing containers...'
+        docker-compose down || true
+        
+        echo 'Building and starting containers...'
+        docker-compose up -d --build
+        
+        echo 'Verifying deployment...'
+        sleep 10
+        curl -f http://localhost:5000/health-check || exit 1
+        
+        echo 'Deployment successful!'
+      "
+  only:
+    - main

@@ -9,8 +9,8 @@ import signal
 from endpoint_tester import EndpointTester
 
 # Test parameters
-ENDPOINT_URL = "http://localhost:5000/stocks/graphql"
-# From within a container in the same network: http://log430-a25-labo3-store_manager:5000/stocks/graphql
+ENDPOINT_URL = "http://log430-a25-labo3-store_manager-1:5000/stocks/graphql-query"
+# Communication entre conteneurs via le nom du service Docker
 TEST_PAYLOAD = "{\"query\":\"{\\n  product(id: \\\"1\\\") {\\n    id\\n    name\\n    sku\\n    price\\n    quantity\\n  }\\n}\\n\",\"variables\":{}}"
 INTERVAL_SECONDS = 10  
 TIMEOUT_SECONDS = 10   
