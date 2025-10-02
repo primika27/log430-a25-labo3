@@ -78,4 +78,4 @@ def test_stock_flow(client):
     response = client.get(f"/stocks/{data['product_id']}")
     assert response.status_code == 201
     final_stock = response.get_json()
-    assert final_stock == {'product_id': data['product_id'], 'quantity': 5}  # Should be back to 5
+    assert final_stock == {'product_id': data['product_id'], 'quantity': 5} #stock retourne a 5
