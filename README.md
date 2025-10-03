@@ -115,3 +115,5 @@ Si vous rencontrez des difficultés dans la réalisation des activités et que v
 
 - Un fichier .zip contenant l'intégralité du code source du projet Labo 03.
 - Un rapport en .pdf répondant aux questions présentées dans ce document. Il est obligatoire d'illustrer vos réponses avec du code ou des captures d'écran/terminal.
+#   T e s t   p i p e l i n e  
+ 
