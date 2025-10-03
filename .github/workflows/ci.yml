@@ -35,28 +35,17 @@ jobs:
         run: echo "Call pytest command here!"
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, linux, vm-lab]
     needs: test
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          echo "Host ${{ secrets.VM_HOST }}" >> ~/.ssh/config
-          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
-          echo "  UserKnownHostsFile /dev/null" >> ~/.ssh/config
-          
       - name: Deploy to VM
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} << 'EOF'
-            cd ~/log430-a25-labo3 || git clone https://github.com/primika27/log430-a25-labo3.git ~/log430-a25-labo3
-            git pull origin main
-            docker compose down
-            docker compose build --no-cache
-            docker compose up -d
-            echo "Deployment completed"
-          EOF
+          cd /home/log430/log430-a25-labo3
+          git pull origin main
+          docker compose down
+          docker compose build --no-cache
+          docker compose up -d
+          echo "Deployment completed"
