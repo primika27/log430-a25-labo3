@@ -3,10 +3,14 @@ services:
     build: .
     environment:
       - PYTHONUNBUFFERED=1
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     volumes:
       - .:/app
     networks:
-      - labo03- network
+      - labo03-network
 
 networks:
   labo03-network:
