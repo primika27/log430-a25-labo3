@@ -25,9 +25,7 @@ jobs:
           echo "DB_PORT=3306" >> .env
           echo "DB_NAME=labo03_db" >> .env
           echo "DB_USER=labo03" >> .env
-          echo "DB_PASS=labo03          git add .
-          git commit -m "Test CI/CD pipeline with SSH keys"
-          git push origin main" >> .env
+          echo "DB_PASS=labo03" >> .env
           echo "REDIS_HOST=127.0.0.1" >> .env
           echo "REDIS_PORT=6379" >> .env
           echo "REDIS_DB=0" >> .env
@@ -53,7 +51,7 @@ jobs:
       - name: Deploy to VM
         run: |
           ssh -i ~/.ssh/id_ed25519 ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} << 'EOF'
-            cd ~/log430-a25-labo3
+            cd ~/log430-a25-labo3 || git clone https://github.com/primika27/log430-a25-labo3.git ~/log430-a25-labo3
             git pull origin main
             docker compose down
             docker compose build --no-cache
